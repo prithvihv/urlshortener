@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -15,6 +16,15 @@ type tinyURL struct {
 	TinyURLuid string
 	Hits       int
 	CreatedAt  int64
+}
+
+func updateHit(tinyurl string) {
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	filter := bson.M{"tinyurluid": tinyurl}
+	update := bson.M{
+		"$inc": bson.M{"hits": 1},
+	}
+	tinysCollection.FindOneAndUpdate(ctx, filter, update, &options.FindOneAndUpdateOptions{})
 }
 
 var (

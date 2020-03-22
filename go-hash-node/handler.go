@@ -56,11 +56,11 @@ func getFullURL(w http.ResponseWriter, r *http.Request) {
 	// check redis first
 	url, err := redisClient.Get(tinyuid).Result()
 	if err == redis.Nil {
-		fmt.Println("key2 does not exist")
 	} else if err != nil {
 		panic(err)
 	} else {
 		fmt.Println("[REDIS CACHE]", url)
+		go updateHit(tinyuid)
 		fmt.Fprintf(w, url)
 		return
 	}
@@ -73,7 +73,9 @@ func getFullURL(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		// log.Fatal(err) 500 error here
 		fmt.Println(err)
+		return
 	}
+	go updateHit(tinyuid)
 	res, _ := json.Marshal(rtinyURL)
 	redisClient.Set(rtinyURL.TinyURLuid, rtinyURL.FullURL, 20*time.Minute)
 	fmt.Fprintf(w, string(res))
