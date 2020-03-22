@@ -29,7 +29,7 @@ func updateHit(tinyurl string) {
 
 var (
 	client          *mongo.Client
-	mongoURL        = "mongodb://localhost:27017"
+	mongoURL        = "mongodb://mongo.prv:27017"
 	tinysCollection *mongo.Collection
 )
 
@@ -49,6 +49,6 @@ func initDb() {
 		return
 	}
 
-	tinysCollection = client.Database("testing").Collection("numbers")
+	tinysCollection = client.Database("testing").Collection("tinyURLs")
 	fmt.Println("connected to nosql database:", mongoURL)
 }

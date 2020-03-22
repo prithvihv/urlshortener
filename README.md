@@ -1,12 +1,3 @@
-# Goal
-
-
-# STEPS
-1. hash the full url
-2. insert into { hash , fullURL , hits } into table
-3. 
-
-
 # Hash mechanism
 ## Goal: create random 6 letter char that are unique , try to avoid collision , and collision checking on the db side.
 ## idea 1 
@@ -28,14 +19,15 @@ Crc32 thoretical unique values is ~4 billion but ,unfortunely after studying crc
 
 ## idea 3
 - use random string generator to make 6 letters
-........ same
+........ same steps as idea2
 
 IO operations are more expensive in terms of time. Therefore idea 2 resolves this issue by first trying a calculated random key.
 
 ## idea 4
 - use counter to just count up 1 and use that as a unique key
 
-counters would out grow range and the url would become long again :/
+counters would out grow range and the url would become long again :/.
+Harder to turn into a distributed system.
 
 ## idea 5
 - same as idea 2 but use md5 reason:
@@ -43,3 +35,20 @@ counters would out grow range and the url would become long again :/
 
 # Storage and persistent layer
 ## Storage systems : Mongodb ,redis
+implemented timeouts(ttl) on both levels
+
+# How to install and run 
+- Please add '127.0.0.1       gohashnode' to your /etc/hosts file.
+- run ```docker-compose up ```
+
+
+# Tech Stack
+- golang
+- VueJS
+- Redis
+- Mongo
+- Docker
+- docker-compose
+
+# demo
+![Alt Text](./docs/demo.gif)

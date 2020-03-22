@@ -1,0 +1,24 @@
+version: '3.6'
+services:
+  mongo.prv:
+    image: mongo
+    restart: always
+    volumes:
+      - db_data:/data/db 
+      - ./mongo/init.js:/docker-entrypoint-initdb.d/init.js
+  gohashnode:
+    build: ./go-hash-node 
+    depends_on:
+      - mongo.prv 
+    ports: 
+      - 9000:9000
+  front_end:
+    build: ./tny-frontend
+    restart: always
+    ports: 
+      - 9998:8080
+  redis.prv:
+    image: redis 
+    restart: always
+volumes:
+  db_data:

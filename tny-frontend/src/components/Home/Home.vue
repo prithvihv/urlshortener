@@ -2,13 +2,14 @@
   <div class="hello">
     <input v-model="url" type="text" name="fullURL" id="fullURL" />
     <br />
-    <ul>
-      <li :key="key" v-for="(value, key) in tnyStore">
+    <div  :key="key" v-for="(value, key) in tnyStore">
+      <div>
         {{ key }}
-        <br />
+        <br>
         <a :href="getAppServerURL+value">{{ getAppServerURL+value}}</a>
-      </li>
-    </ul>
+      </div>
+    </div>
+
     <br />
     <button @click="onSubmit">Get Small url</button>
   </div>

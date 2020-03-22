@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -29,7 +30,9 @@ func createShortURL(w http.ResponseWriter, r *http.Request) {
 	}
 	hashedURL := hash(url)
 	uid := hashedURL[:7]
+	uid = strings.ReplaceAll(uid, "/", "|")
 	fmt.Println(uid)
+
 	ntinyURL := &tinyURL{
 		FullURL:    url,
 		CreatedAt:  time.Now().Local().Unix(),
@@ -46,7 +49,11 @@ func createShortURL(w http.ResponseWriter, r *http.Request) {
 			stored = true
 		} else {
 			// make new uid
-			ntinyURL.TinyURLuid = randomStringOfSize(7, hashedURL)
+			nuid := randomStringOfSize(7, hashedURL)
+			nuid = strings.ReplaceAll(uid, "/", "|")
+			ntinyURL.TinyURLuid = nuid
+			println("[DB] err unique key, trying new key " + nuid)
+
 		}
 	}
 	res, _ := json.Marshal(ntinyURL)
