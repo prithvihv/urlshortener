@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -16,5 +17,10 @@ func main() {
 	router.HandleFunc("/", createShortURL).Methods("POST")
 	router.HandleFunc("/{tinyuid}", getFullURL).Methods("GET")
 	fmt.Println("[HTTP] hashnode running at ")
-	log.Fatal(http.ListenAndServe(":9000", router))
+
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With"})
+	originsOk := handlers.AllowedOrigins([]string{"localhost:8080", "*"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+
+	log.Fatal(http.ListenAndServe(":9000", handlers.CORS(originsOk, headersOk, methodsOk)(router)))
 }
