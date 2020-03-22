@@ -41,10 +41,24 @@ func createShortURL(w http.ResponseWriter, r *http.Request) {
 	}
 	res, _ := json.Marshal(ntinyURL)
 	w.WriteHeader(http.StatusOK)
-	w.Header().Add("Content-type", "application/json")
+	w.Header().Add("Content-Type", "application/json")
 	fmt.Fprintf(w, string(res))
 }
 
 func getFullURL(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome home!")
+	vars := mux.Vars(r)
+	tinyuid := vars["tinyuid"]
+	if tinyuid == "" {
+		// return 400 here
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	var rtinyURL tinyURL
+	filter := bson.M{"tinyurluid": tinyuid}
+	err := tinysCollection.FindOne(ctx, filter).Decode(&rtinyURL)
+	if err != nil {
+		// log.Fatal(err)
+		fmt.Println(err)
+	}
+	res, _ := json.Marshal(rtinyURL)
+	fmt.Fprintf(w, string(res))
 }

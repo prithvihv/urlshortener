@@ -10,7 +10,8 @@ import (
 
 func hash(url string) string {
 	h := sha256.New()
-	byteString := h.Sum([]byte(url))
+	h.Write([]byte(url))
+	byteString := h.Sum(nil)
 	stringEncoded := base64.StdEncoding.EncodeToString(byteString[:])
 	return stringEncoded
 }
