@@ -1,11 +1,10 @@
 package main
 
 import (
-	"bytes"
 	"crypto/sha256"
 	"encoding/base64"
 	"math/rand"
-	"time"
+	"strings"
 )
 
 func hash(url string) string {
@@ -17,11 +16,13 @@ func hash(url string) string {
 }
 
 func randomStringOfSize(l int, s string) string {
-	var buffer bytes.Buffer
-	for len(s) != 7 {
-		buffer.WriteString(pickRandomChar(s))
+	var str strings.Builder
+	for c := 0; c != 7; c++ {
+		char := pickRandomChar(s) // post issue here
+		println(char)
+		str.WriteString(char)
 	}
-	return buffer.String()
+	return str.String()
 }
 
 func pickRandomChar(s string) string {
@@ -29,7 +30,8 @@ func pickRandomChar(s string) string {
 	return string(s[charIndex])
 }
 
+var r = rand.New(rand.NewSource(99))
+
 func random(min, max int) int {
-	rand.Seed(time.Now().Unix())
-	return rand.Intn(max-min) + min
+	return r.Intn(max-min) + min
 }
