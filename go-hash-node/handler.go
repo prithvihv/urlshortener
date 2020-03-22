@@ -70,7 +70,8 @@ func getFullURL(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Println("[REDIS CACHE]", url)
 		go updateHit(tinyuid)
-		fmt.Fprintf(w, url)
+		// fmt.Fprintf(w, url)
+		http.Redirect(w, r, url, http.StatusPermanentRedirect)
 		return
 	}
 
@@ -85,7 +86,8 @@ func getFullURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	go updateHit(tinyuid)
-	res, _ := json.Marshal(rtinyURL)
+	// res, _ := json.Marshal(rtinyURL)
 	redisClient.Set(rtinyURL.TinyURLuid, rtinyURL.FullURL, 20*time.Minute)
-	fmt.Fprintf(w, string(res))
+	http.Redirect(w, r, rtinyURL.FullURL, http.StatusPermanentRedirect)
+	return
 }
