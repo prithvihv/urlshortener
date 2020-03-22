@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"time"
 
@@ -13,8 +14,16 @@ import (
 )
 
 func createShortURL(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	url := vars["url"]
+	// vars := mux.Vars(r)
+	// url := vars["url"]
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	defer r.Body.Close()
+
+	url := string(b)
 	if url == "" {
 		// return 400 here
 	}
